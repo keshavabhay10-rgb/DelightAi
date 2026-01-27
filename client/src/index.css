@@ -25,90 +25,70 @@
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Outfit', sans-serif;
   
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
+  --radius-sm: 0.2rem;
+  --radius-md: 0.4rem;
+  --radius-lg: 0.6rem;
 }
 
 :root {
-  /* 60% Dominant: Deep Void Blue */
-  --background: 222 47% 11%;
-  --foreground: 210 40% 98%;
+  /* Blade Runner 2049 Inspired Palette with High Whitespace */
+  --background: 0 0% 100%; /* Pure White */
+  --foreground: 350 20% 10%; /* Very Dark Brown/Black (#2b1718) */
 
-  /* 30% Secondary: Soft Lavender / Glass */
-  --card: 222 47% 13%; /* Slightly lighter than bg */
-  --card-foreground: 210 40% 98%;
-  --popover: 222 47% 11%;
-  --popover-foreground: 210 40% 98%;
+  --primary: 354 100% 32%; /* Deep Red (#a30502) */
+  --primary-foreground: 0 0% 100%;
 
-  /* 10% Accent: Electric Mint */
-  --primary: 160 84% 39%;
-  --primary-foreground: 222 47% 11%;
+  --secondary: 40 97% 49%; /* Warm Orange (#f78b04) */
+  --secondary-foreground: 0 0% 100%;
 
-  --secondary: 243 75% 59%;
-  --secondary-foreground: 210 40% 98%;
+  --accent: 189 95% 29%; /* Deep Teal (#027f93) */
+  --accent-foreground: 0 0% 100%;
 
-  --muted: 217 33% 17%;
-  --muted-foreground: 215 20% 65%;
+  --muted: 210 10% 96%;
+  --muted-foreground: 210 5% 40%;
 
-  --accent: 160 84% 39%;
-  --accent-foreground: 222 47% 11%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 354 100% 32%;
 
-  --destructive: 0 62% 30%;
-  --destructive-foreground: 210 40% 98%;
-
-  --border: 217 33% 20%;
-  --input: 217 33% 20%;
-  --ring: 160 84% 39%;
-
-  --radius: 0.75rem;
+  --radius: 0.4rem;
 }
 
 body {
   @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
-  selection-background-color: hsl(var(--primary));
-  selection-color: hsl(var(--primary-foreground));
 }
 
 h1, h2, h3, h4, h5, h6 {
-  @apply font-display font-bold tracking-tight;
+  @apply font-display font-light tracking-tight;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: hsl(var(--background));
-}
-
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted));
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--secondary));
-}
-
-/* Utility classes for glassmorphism */
-.glass {
-  background: rgba(30, 41, 59, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.glass-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-}
-
-.text-gradient {
-  background: linear-gradient(to right, hsl(var(--primary)), hsl(var(--secondary)));
+.text-gradient-red {
+  background: linear-gradient(to right, #a30502, #f78b04);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-teal {
+  background: linear-gradient(to right, #153a42, #027f93);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes eye-shake {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(1px, 1px); }
+  50% { transform: translate(-1px, -1px); }
+  75% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+}
+
+.animate-eye-shake {
+  animation: eye-shake 0.15s cubic-bezier(.36,.07,.19,.97) both;
+  animation-iteration-count: 2;
+}
+
+.glass-minimal {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
