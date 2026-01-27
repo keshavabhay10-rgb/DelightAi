@@ -31,8 +31,8 @@
 }
 
 :root {
-  /* Blade Runner 2049 Inspired Palette with High Whitespace */
-  --background: 0 0% 100%; /* Pure White */
+  /* Blade Runner 2049 Inspired Palette - More Balanced */
+  --background: 15 10% 98%; /* Off White / Warm */
   --foreground: 350 20% 10%; /* Very Dark Brown/Black (#2b1718) */
 
   --primary: 354 100% 32%; /* Deep Red (#a30502) */
@@ -44,11 +44,11 @@
   --accent: 189 95% 29%; /* Deep Teal (#027f93) */
   --accent-foreground: 0 0% 100%;
 
-  --muted: 210 10% 96%;
-  --muted-foreground: 210 5% 40%;
+  --muted: 15 10% 90%;
+  --muted-foreground: 15 5% 40%;
 
-  --border: 0 0% 90%;
-  --input: 0 0% 90%;
+  --border: 15 10% 85%;
+  --input: 15 10% 85%;
   --ring: 354 100% 32%;
 
   --radius: 0.4rem;
@@ -62,33 +62,42 @@ h1, h2, h3, h4, h5, h6 {
   @apply font-display font-light tracking-tight;
 }
 
-.text-gradient-red {
-  background: linear-gradient(to right, #a30502, #f78b04);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
-.text-gradient-teal {
-  background: linear-gradient(to right, #153a42, #027f93);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
 
-@keyframes eye-shake {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(1px, 1px); }
-  50% { transform: translate(-1px, -1px); }
-  75% { transform: translate(1px, -1px); }
-  100% { transform: translate(0, 0); }
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
 }
 
-.animate-eye-shake {
-  animation: eye-shake 0.15s cubic-bezier(.36,.07,.19,.97) both;
-  animation-iteration-count: 2;
+.hover-glitch:hover {
+  animation: glitch 0.3s cubic-bezier(.36,.07,.19,.97) both;
 }
 
-.glass-minimal {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+@keyframes scan {
+  0% { top: 0%; }
+  100% { top: 100%; }
+}
+
+.scanline::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(163, 5, 2, 0.1);
+  animation: scan 4s linear infinite;
 }
