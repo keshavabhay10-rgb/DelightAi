@@ -1,6 +1,24 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useRef } from "react";
 import Sidebar from "@/components/layout/Sidebar";
-import { useState, useEffect } from "react";
+import Footer from "@/components/layout/Footer";
+
+function SlideImage({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
+
+  return (
+    <motion.div 
+      ref={ref}
+      initial={{ clipPath: "inset(0 100% 0 0)" }}
+      animate={isInView ? { clipPath: "inset(0 0% 0 0)" } : {}}
+      transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
+      className={`overflow-hidden ${className}`}
+    >
+      <img src={src} alt={alt} className="w-full h-full object-cover grayscale" />
+    </motion.div>
+  );
+}
 
 const services = [
   {
@@ -20,15 +38,25 @@ const services = [
     title: "Systemic Integration",
     description: "We don't just add tools; we weave a digital fabric that connects every department seamlessly.",
     image: "/client/src/assets/minimal_office_3.jpg"
+  },
+  {
+    id: "04",
+    title: "Cognitive Supply",
+    description: "Anticipatory logistics and inventory management powered by predictive neural networks.",
+    image: "/client/src/assets/minimal_detail_1.jpg"
   }
 ];
 
 export default function ServicesPage() {
+  const { scrollYProgress } = useScroll();
+  const bgColor = useTransform(scrollYProgress, [0, 0.2], ["#0d0d0d", "#ffffff"]);
+  const textColor = useTransform(scrollYProgress, [0, 0.2], ["#ffffff", "#0d0d0d"]);
+
   return (
-    <div className="bg-background text-foreground min-h-screen selection:bg-primary selection:text-white">
+    <motion.div style={{ backgroundColor: bgColor, color: textColor }} className="min-h-screen transition-colors duration-1000">
       <Sidebar />
       <main className="pt-32">
-        <header className="px-6 md:px-24 mb-32">
+        <header className="px-6 md:px-24 mb-32 h-[60vh] flex flex-col justify-center">
           <motion.h1 
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
@@ -39,29 +67,34 @@ export default function ServicesPage() {
         </header>
 
         {services.map((service, index) => (
-          <section key={service.id} className="min-h-screen py-24 px-6 md:px-24 border-t border-white/5 flex flex-col justify-center">
+          <section key={service.id} className="min-h-screen py-24 px-6 md:px-24 border-t border-current/5 flex flex-col justify-center">
             <div className="grid lg:grid-cols-2 gap-24 items-center">
               <div className={index % 2 !== 0 ? "lg:order-2" : ""}>
                  <h2 className="text-[10px] uppercase tracking-[0.5em] font-bold opacity-50 mb-8">{service.id} — {service.title}</h2>
                  <p className="text-3xl md:text-5xl font-light tracking-tight leading-tight mb-12">
                    {service.description}
                  </p>
-                 <button className="text-[10px] uppercase tracking-[0.3em] font-bold border-b border-primary pb-2">Explore Flow</button>
+                 <button className="text-[10px] uppercase tracking-[0.3em] font-bold border-b border-primary pb-2 hover:opacity-50 transition-all">Explore Flow</button>
               </div>
 
-              <motion.div 
-                initial={{ clipPath: "inset(0 100% 0 0)" }}
-                whileInView={{ clipPath: "inset(0 0% 0 0)" }}
-                transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
-                viewport={{ once: true }}
-                className={`aspect-square overflow-hidden ${index % 2 !== 0 ? "lg:order-1" : ""}`}
-              >
-                <img src={service.image} alt={service.title} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
-              </motion.div>
+              <SlideImage 
+                src={service.image} 
+                alt={service.title} 
+                className={`aspect-square ${index % 2 !== 0 ? "lg:order-1" : ""}`}
+              />
             </div>
           </section>
         ))}
+        
+        <section className="py-64 px-6 md:px-24 bg-current/5 flex flex-col items-center">
+           <h3 className="text-xs uppercase tracking-[0.8em] mb-12">Beyond Tools</h3>
+           <div className="grid md:grid-cols-2 gap-24 max-w-4xl">
+              <p className="text-xl font-light leading-relaxed">Automation is not about removal. It is about redistribution of human brilliance to where it matters most.</p>
+              <p className="text-xl font-light leading-relaxed">Our systems operate with 0.04% error thresholds, outperforming standard manual entry by 1400% in speed.</p>
+           </div>
+        </section>
       </main>
-    </div>
+      <Footer />
+    </motion.div>
   );
 }

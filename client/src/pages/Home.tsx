@@ -1,19 +1,37 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { useRef } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import Hero from "@/components/sections/Hero";
+import Footer from "@/components/layout/Footer";
+
+function SlideImage({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
+
+  return (
+    <motion.div 
+      ref={ref}
+      initial={{ clipPath: "inset(0 100% 0 0)" }}
+      animate={isInView ? { clipPath: "inset(0 0% 0 0)" } : {}}
+      transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
+      className={`overflow-hidden ${className}`}
+    >
+      <img src={src} alt={alt} className="w-full h-full object-cover grayscale" />
+    </motion.div>
+  );
+}
 
 export default function Home() {
   const { scrollYProgress } = useScroll();
   
-  // Transition from dark to white
-  const bgColor = useTransform(scrollYProgress, [0, 0.45], ["#0d0d0d", "#ffffff"]);
-  const textColor = useTransform(scrollYProgress, [0, 0.45], ["#ffffff", "#0d0d0d"]);
+  // Faster transition: 0 to 0.3 instead of 0.45
+  const bgColor = useTransform(scrollYProgress, [0, 0.3], ["#0d0d0d", "#ffffff"]);
+  const textColor = useTransform(scrollYProgress, [0, 0.3], ["#ffffff", "#0d0d0d"]);
 
   return (
     <motion.div 
       style={{ backgroundColor: bgColor, color: textColor }}
-      className="min-h-screen transition-colors duration-1000"
+      className="min-h-screen"
     >
       <Sidebar />
       <main>
@@ -22,15 +40,11 @@ export default function Home() {
         {/* Process Automation Section */}
         <section className="py-64 px-6 md:px-24">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-32 items-center">
-            <motion.div 
-              initial={{ clipPath: "inset(0 100% 0 0)" }}
-              whileInView={{ clipPath: "inset(0 0% 0 0)" }}
-              transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
-              viewport={{ once: true }}
-              className="relative aspect-[4/5] overflow-hidden"
-            >
-              <img src="/client/src/assets/minimal_office_1.jpg" alt="Automation" className="w-full h-full object-cover grayscale" />
-            </motion.div>
+            <SlideImage 
+              src="/client/src/assets/minimal_office_1.jpg" 
+              alt="Automation" 
+              className="relative aspect-[4/5]"
+            />
             
             <div className="space-y-12">
               <h2 className="text-[10px] uppercase tracking-[0.6em] font-bold opacity-40">Section 01 — Autonomy</h2>
@@ -38,32 +52,16 @@ export default function Home() {
                 Replacing <span className="italic">friction</span> with flow.
               </h3>
               <p className="text-xl opacity-70 font-light leading-relaxed max-w-md">
-                We engineer bespoke AI agents that handle the heavy lifting of business operations. From supply chain logic to customer experience, we automate the predictable so you can focus on the exceptional.
+                We engineer bespoke AI agents that handle the heavy lifting of business operations. From supply chain logic to customer experience, we automate the predictable.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Gallery Section with Slide-in Animations */}
+        {/* Gallery Section */}
         <section className="py-32 px-6 md:px-24 grid md:grid-cols-2 gap-16">
-          <motion.div 
-            initial={{ clipPath: "inset(0 100% 0 0)" }}
-            whileInView={{ clipPath: "inset(0 0% 0 0)" }}
-            transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
-            viewport={{ once: true }}
-            className="aspect-square overflow-hidden"
-          >
-            <img src="/client/src/assets/minimal_office_2.jpg" alt="Detail 1" className="w-full h-full object-cover grayscale" />
-          </motion.div>
-          <motion.div 
-            initial={{ clipPath: "inset(0 100% 0 0)" }}
-            whileInView={{ clipPath: "inset(0 0% 0 0)" }}
-            transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1], delay: 0.2 }}
-            viewport={{ once: true }}
-            className="aspect-square overflow-hidden md:mt-32"
-          >
-            <img src="/client/src/assets/minimal_office_3.jpg" alt="Detail 2" className="w-full h-full object-cover grayscale" />
-          </motion.div>
+          <SlideImage src="/client/src/assets/minimal_office_2.jpg" alt="Detail 1" className="aspect-square" />
+          <SlideImage src="/client/src/assets/minimal_office_3.jpg" alt="Detail 2" className="aspect-square md:mt-32" />
         </section>
 
         <section className="py-64 text-center px-6">
@@ -75,31 +73,32 @@ export default function Home() {
           >
             <h4 className="text-[10px] uppercase tracking-[0.6em] font-bold opacity-40 mb-16">Section 02 — Intelligence</h4>
             <p className="text-4xl md:text-6xl font-light tracking-tight leading-snug">
-              "The ultimate sophistication is <span className="italic">simplicity</span>. We find it through automation."
+              "Every process refined is a <span className="italic">victory</span> for clarity."
             </p>
+            <div className="flex justify-center gap-12 mt-24">
+               <div>
+                 <h5 className="text-3xl font-light">40%</h5>
+                 <p className="text-[9px] uppercase tracking-widest opacity-40">Cost Reduction</p>
+               </div>
+               <div>
+                 <h5 className="text-3xl font-light">12x</h5>
+                 <p className="text-[9px] uppercase tracking-widest opacity-40">Throughput Velocity</p>
+               </div>
+            </div>
           </motion.div>
         </section>
 
         <section className="pb-64 px-6 md:px-24">
-          <motion.div 
-            initial={{ clipPath: "inset(0 100% 0 0)" }}
-            whileInView={{ clipPath: "inset(0 0% 0 0)" }}
-            transition={{ duration: 1.8, ease: [0.19, 1, 0.22, 1] }}
-            className="w-full h-[80vh] overflow-hidden"
-          >
-            <img src="/client/src/assets/minimal_office_4.jpg" alt="Final Insight" className="w-full h-full object-cover grayscale" />
-          </motion.div>
+          <SlideImage src="/client/src/assets/minimal_office_4.jpg" alt="Final Insight" className="w-full h-[80vh]" />
+        </section>
+
+        <section className="py-32 px-6 md:px-24 grid md:grid-cols-3 gap-8">
+           <SlideImage src="/client/src/assets/minimal_detail_1.jpg" alt="Arch 1" className="aspect-[3/4]" />
+           <SlideImage src="/client/src/assets/minimal_detail_2.jpg" alt="Arch 2" className="aspect-[3/4] md:mt-16" />
+           <SlideImage src="/client/src/assets/minimal_detail_3.jpg" alt="Arch 3" className="aspect-[3/4] md:mt-32" />
         </section>
       </main>
-      
-      <footer className="py-16 px-6 md:px-24 border-t border-current/5 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-[0.5em] opacity-40 gap-8">
-        <p>© 2026 DelightAI Global</p>
-        <div className="flex gap-12">
-          <a href="#" className="hover:opacity-100 transition-opacity">Privacy</a>
-          <a href="#" className="hover:opacity-100 transition-opacity">Terms</a>
-          <a href="#" className="hover:opacity-100 transition-opacity">Contact</a>
-        </div>
-      </footer>
+      <Footer />
     </motion.div>
   );
 }
