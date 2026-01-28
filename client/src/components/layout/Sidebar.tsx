@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { Menu, X, Search } from "lucide-react";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 
 const menuItems = [
   { label: "Solutions", href: "/services" },
@@ -13,15 +13,16 @@ const menuItems = [
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const { scrollY } = useScroll();
-  
-  const navBg = useTransform(scrollY, [0, 400], ["rgba(0,0,0,0)", "rgba(255,255,255,0.8)"]);
+
+  // Starts transparent on dark hero, transitions to warm white bg
+  const navBg = useTransform(scrollY, [0, 400], ["rgba(0,0,0,0)", "rgba(248,246,243,0.9)"]);
   const navBorder = useTransform(scrollY, [0, 400], ["rgba(255,255,255,0)", "rgba(0,0,0,0.05)"]);
-  const navColor = useTransform(scrollY, [0, 400], ["#ffffff", "#0d0d0d"]);
+  const navColor = useTransform(scrollY, [0, 400], ["#ffffff", "#2e2a25"]);
   const logoInvert = useTransform(scrollY, [0, 400], ["invert(1)", "invert(0)"]);
 
   return (
     <>
-      <motion.nav 
+      <motion.nav
         style={{ backgroundColor: navBg, borderColor: navBorder, color: navColor }}
         className="fixed top-0 left-0 right-0 h-20 z-50 flex items-center justify-between px-6 md:px-12 backdrop-blur-md transition-colors duration-500"
       >
@@ -38,7 +39,7 @@ export default function Sidebar() {
             <Link key={item.label} href={item.href}>
               <motion.a
                 whileHover={{ opacity: 0.5 }}
-                className="text-[10px] font-bold tracking-[0.3em] uppercase cursor-pointer"
+                className="text-[10px] font-medium tracking-[0.3em] uppercase cursor-pointer"
               >
                 {item.label}
               </motion.a>
@@ -48,10 +49,10 @@ export default function Sidebar() {
 
         <div className="flex items-center gap-8">
           <div className="hidden md:flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
-            <span className="text-[10px] uppercase tracking-widest font-bold">Search</span>
+            <span className="text-[10px] uppercase tracking-widest font-medium">Search</span>
             <Search size={14} />
           </div>
-          <button 
+          <button
             onClick={() => setIsOpen(!isOpen)}
             className="lg:hidden"
           >
@@ -67,7 +68,7 @@ export default function Sidebar() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 bg-background z-[60] flex flex-col p-12 lg:hidden"
+            className="fixed inset-0 bg-[#0d0d0d] text-white z-[60] flex flex-col p-12 lg:hidden"
           >
             <button onClick={() => setIsOpen(false)} className="self-end mb-12">
               <X size={32} />

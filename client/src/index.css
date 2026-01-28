@@ -21,28 +21,48 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
-  
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Outfit', sans-serif;
+
+  --font-sans: 'Sora', sans-serif;
+  --font-display: 'Sora', sans-serif;
 }
 
 :root {
-  --background: 0 0% 5%;
-  --foreground: 0 0% 98%;
-  --primary: 354 100% 32%;
-  --secondary: 40 97% 49%;
-  --accent: 189 95% 29%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 65%;
-  --border: 0 0% 20%;
-  --input: 0 0% 20%;
-  --ring: 354 100% 32%;
-  --radius: 0rem;
+  /* Warm whites & cool grays — Blade Runner 2049 palette */
+  --background: 30 14% 96%;        /* #f8f6f3 warm white */
+  --foreground: 30 5% 18%;         /* dark warm gray, NO pure black */
+  --primary: 28 42% 64%;           /* #d4a574 muted amber */
+  --primary-foreground: 30 14% 96%;
+  --secondary: 15 22% 69%;         /* #c9a29a dusty rose */
+  --secondary-foreground: 30 5% 18%;
+  --accent: 190 22% 64%;           /* #88b8c0 pale cyan */
+  --accent-foreground: 30 5% 18%;
+  --muted: 30 10% 90%;             /* light warm gray */
+  --muted-foreground: 30 5% 45%;   /* readable mid-gray */
+  --card: 30 14% 96%;
+  --card-foreground: 30 5% 18%;
+  --popover: 30 14% 96%;
+  --popover-foreground: 30 5% 18%;
+  --border: 30 8% 82%;
+  --input: 30 8% 82%;
+  --ring: 28 42% 64%;
+  --radius: 0.5rem;
+  --destructive: 0 60% 50%;
+  --destructive-foreground: 0 0% 98%;
 }
 
 body {
   @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
-  cursor: crosshair; /* Custom cursor */
+}
+
+/* Subtle film grain overlay */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
 /* breathing animation */
@@ -65,11 +85,26 @@ body {
   clip-path: inset(0 0% 0 0);
 }
 
+/* Warm section background */
+.bg-section-warm {
+  background-color: #f8f6f3;
+}
+
+/* Cool section background */
+.bg-section-cool {
+  background-color: #e4e6e8;
+}
+
+/* Neutral section background */
+.bg-section-neutral {
+  background-color: #f0eeeb;
+}
+
 .footer-logo {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Sora', sans-serif;
   font-weight: 300;
   letter-spacing: -0.05em;
   font-style: italic;
-  opacity: 0.05;
+  opacity: 0.04;
   font-size: 15vw;
 }
