@@ -1,88 +1,105 @@
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import Sidebar from "@/components/layout/Sidebar";
 import Hero from "@/components/sections/Hero";
-import { motion } from "framer-motion";
 
 export default function Home() {
+  const { scrollYProgress } = useScroll();
+  
+  // Transition from dark to white
+  const bgColor = useTransform(scrollYProgress, [0, 0.45], ["#0d0d0d", "#ffffff"]);
+  const textColor = useTransform(scrollYProgress, [0, 0.45], ["#ffffff", "#0d0d0d"]);
+
   return (
-    <div className="bg-background min-h-screen text-foreground selection:bg-primary selection:text-white">
+    <motion.div 
+      style={{ backgroundColor: bgColor, color: textColor }}
+      className="min-h-screen transition-colors duration-1000"
+    >
       <Sidebar />
       <main>
         <Hero />
         
-        {/* New Feature Section */}
-        <section className="py-32 px-6 md:px-24 bg-muted/30">
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-24 items-center">
+        {/* Process Automation Section */}
+        <section className="py-64 px-6 md:px-24">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-32 items-center">
             <motion.div 
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ clipPath: "inset(0 100% 0 0)" }}
+              whileInView={{ clipPath: "inset(0 0% 0 0)" }}
+              transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
               viewport={{ once: true }}
-              className="relative aspect-[4/5] overflow-hidden scanline"
+              className="relative aspect-[4/5] overflow-hidden"
             >
-              <img src="/client/src/assets/minimal_arch_1.jpg" alt="Architecture" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000 scale-110 hover:scale-100" />
-              <div className="absolute inset-0 border-[20px] border-background m-8 pointer-events-none" />
+              <img src="/client/src/assets/minimal_office_1.jpg" alt="Automation" className="w-full h-full object-cover grayscale" />
             </motion.div>
             
             <div className="space-y-12">
-              <h2 className="text-xs uppercase tracking-[0.5em] font-bold text-primary">Manifesto</h2>
-              <p className="text-4xl md:text-5xl font-light leading-tight tracking-tighter">
-                We bridge the gap between <span className="italic">biological intuition</span> and <span className="text-secondary">digital precision</span>.
+              <h2 className="text-[10px] uppercase tracking-[0.6em] font-bold opacity-40">Section 01 — Autonomy</h2>
+              <h3 className="text-5xl md:text-7xl font-light tracking-tighter leading-none">
+                Replacing <span className="italic">friction</span> with flow.
+              </h3>
+              <p className="text-xl opacity-70 font-light leading-relaxed max-w-md">
+                We engineer bespoke AI agents that handle the heavy lifting of business operations. From supply chain logic to customer experience, we automate the predictable so you can focus on the exceptional.
               </p>
-              <p className="text-lg text-muted-foreground font-light leading-relaxed max-w-md">
-                In 2026, the interface is no longer a screen. It's a feeling. DelightAI architects environments where intelligence flows naturally.
-              </p>
-              <div className="flex gap-12 pt-8">
-                <div>
-                  <h4 className="text-2xl font-light">0.4ms</h4>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Response Latency</p>
-                </div>
-                <div>
-                  <h4 className="text-2xl font-light">99.9%</h4>
-                  <p className="text-[10px] uppercase tracking-widest text-muted-foreground">Uptime Fidelity</p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
 
-        {/* Philosophy Section */}
-        <section className="py-48 px-6 md:px-24 flex flex-col items-center text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+        {/* Gallery Section with Slide-in Animations */}
+        <section className="py-32 px-6 md:px-24 grid md:grid-cols-2 gap-16">
+          <motion.div 
+            initial={{ clipPath: "inset(0 100% 0 0)" }}
+            whileInView={{ clipPath: "inset(0 0% 0 0)" }}
+            transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
             viewport={{ once: true }}
-            className="max-w-4xl"
+            className="aspect-square overflow-hidden"
           >
-            <h2 className="text-xs uppercase tracking-[0.4em] font-bold text-muted-foreground mb-12">Selective Philosophy</h2>
-            <p className="text-3xl md:text-5xl font-light leading-snug tracking-tight mb-16">
-              "To create something <span className="italic underline underline-offset-8 decoration-primary/30">extraordinary</span>, one must first focus on the mundane with extraordinary care."
-            </p>
-            <div className="w-px h-24 bg-primary/20 mx-auto" />
+            <img src="/client/src/assets/minimal_office_2.jpg" alt="Detail 1" className="w-full h-full object-cover grayscale" />
+          </motion.div>
+          <motion.div 
+            initial={{ clipPath: "inset(0 100% 0 0)" }}
+            whileInView={{ clipPath: "inset(0 0% 0 0)" }}
+            transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1], delay: 0.2 }}
+            viewport={{ once: true }}
+            className="aspect-square overflow-hidden md:mt-32"
+          >
+            <img src="/client/src/assets/minimal_office_3.jpg" alt="Detail 2" className="w-full h-full object-cover grayscale" />
           </motion.div>
         </section>
 
-        {/* Secondary Image Grid */}
-        <section className="pb-32 px-6 md:px-24 grid md:grid-cols-3 gap-8">
-           {[2, 3, 1].map((i) => (
-             <motion.div 
-               key={i}
-               whileHover={{ y: -10 }}
-               className="aspect-square overflow-hidden relative group"
-             >
-               <img src={`/client/src/assets/minimal_arch_${i}.jpg`} alt="Detail" className="w-full h-full object-cover grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700" />
-               <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-all" />
-             </motion.div>
-           ))}
+        <section className="py-64 text-center px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="max-w-4xl mx-auto"
+          >
+            <h4 className="text-[10px] uppercase tracking-[0.6em] font-bold opacity-40 mb-16">Section 02 — Intelligence</h4>
+            <p className="text-4xl md:text-6xl font-light tracking-tight leading-snug">
+              "The ultimate sophistication is <span className="italic">simplicity</span>. We find it through automation."
+            </p>
+          </motion.div>
         </section>
-        
-        <footer className="py-12 px-6 md:px-24 border-t border-black/5 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-muted-foreground gap-8 bg-white">
-          <p>© 2026 DelightAI Inc. — San Francisco</p>
-          <div className="flex gap-12">
-            <a href="#" className="hover:text-primary transition-colors">Instagram</a>
-            <a href="#" className="hover:text-primary transition-colors">LinkedIn</a>
-            <a href="#" className="hover:text-primary transition-colors">X.com</a>
-          </div>
-        </footer>
+
+        <section className="pb-64 px-6 md:px-24">
+          <motion.div 
+            initial={{ clipPath: "inset(0 100% 0 0)" }}
+            whileInView={{ clipPath: "inset(0 0% 0 0)" }}
+            transition={{ duration: 1.8, ease: [0.19, 1, 0.22, 1] }}
+            className="w-full h-[80vh] overflow-hidden"
+          >
+            <img src="/client/src/assets/minimal_office_4.jpg" alt="Final Insight" className="w-full h-full object-cover grayscale" />
+          </motion.div>
+        </section>
       </main>
-    </div>
+      
+      <footer className="py-16 px-6 md:px-24 border-t border-current/5 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-[0.5em] opacity-40 gap-8">
+        <p>© 2026 DelightAI Global</p>
+        <div className="flex gap-12">
+          <a href="#" className="hover:opacity-100 transition-opacity">Privacy</a>
+          <a href="#" className="hover:opacity-100 transition-opacity">Terms</a>
+          <a href="#" className="hover:opacity-100 transition-opacity">Contact</a>
+        </div>
+      </footer>
+    </motion.div>
   );
 }

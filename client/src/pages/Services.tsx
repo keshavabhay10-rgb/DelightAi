@@ -1,118 +1,66 @@
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import Sidebar from "@/components/layout/Sidebar";
+import { useState, useEffect } from "react";
 
 const services = [
   {
-    title: "AI Solutions",
-    description: "Neural networks architected for human-centric problems. We build agents that think like you do.",
-    accent: "bg-[#a30502]",
-    text: "text-primary"
+    id: "01",
+    title: "Operations Audit",
+    description: "Deep diagnostic analysis of your current business flows. We find the silence where efficiency should be.",
+    image: "/client/src/assets/minimal_office_1.jpg"
   },
   {
-    title: "Web Development",
-    description: "High-performance interfaces that bridge the gap between imagination and reality.",
-    accent: "bg-[#f78b04]",
-    text: "text-secondary"
+    id: "02",
+    title: "Neural Automation",
+    description: "Implementing self-learning agents that handle logic-heavy tasks with zero biological error.",
+    image: "/client/src/assets/minimal_office_2.jpg"
   },
   {
-    title: "UI/UX Design",
-    description: "Visual systems that breathe. We prioritize whitespace, typography, and emotion.",
-    accent: "bg-[#153a42]",
-    text: "text-[#153a42]"
-  },
-  {
-    title: "Future Systems",
-    description: "Web3, IoT, and beyond. Preparing your infrastructure for the 2030 digital landscape.",
-    accent: "bg-[#027f93]",
-    text: "text-[#027f93]"
+    id: "03",
+    title: "Systemic Integration",
+    description: "We don't just add tools; we weave a digital fabric that connects every department seamlessly.",
+    image: "/client/src/assets/minimal_office_3.jpg"
   }
 ];
 
-function ServiceSection({ service, index }: { service: typeof services[0], index: number }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.3], [0.8, 1]);
-  const x = useTransform(scrollYProgress, [0, 0.3], [index % 2 === 0 ? -50 : 50, 0]);
-
-  return (
-    <motion.section 
-      ref={ref}
-      style={{ opacity, scale, x }}
-      className="min-h-screen flex flex-col items-center justify-center p-6 md:p-24 overflow-hidden"
-    >
-      <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center">
-        <div className={index % 2 !== 0 ? "md:order-2" : ""}>
-          <motion.div 
-            whileHover={{ scale: 1.05 }}
-            className={`w-20 h-1 mb-8 ${service.accent}`} 
-          />
-          <h2 className="text-4xl md:text-6xl font-light mb-8 tracking-tighter">
-            {service.title}
-          </h2>
-          <p className="text-lg md:text-xl text-muted-foreground font-light leading-relaxed max-w-md">
-            {service.description}
-          </p>
-          <motion.button 
-            whileHover={{ x: 10 }}
-            className={`mt-12 text-xs uppercase tracking-[0.3em] font-medium ${service.text} border-b border-current pb-2`}
-          >
-            Inquire Details
-          </motion.button>
-        </div>
-        
-        <div className={`relative aspect-square glass-minimal border border-black/5 flex items-center justify-center p-12 ${index % 2 !== 0 ? "md:order-1" : ""}`}>
-           <div className={`absolute inset-0 opacity-5 ${service.accent}`} />
-           <motion.div 
-             animate={{ rotate: index % 2 === 0 ? 45 : -45 }}
-             className="text-8xl font-display font-thin text-black/5"
-           >
-             {String(index + 1).padStart(2, '0')}
-           </motion.div>
-        </div>
-      </div>
-    </motion.section>
-  );
-}
-
 export default function ServicesPage() {
   return (
-    <div className="bg-white">
+    <div className="bg-background text-foreground min-h-screen selection:bg-primary selection:text-white">
       <Sidebar />
-      <main className="pt-16">
-        <header className="h-[60vh] flex flex-col items-center justify-center text-center px-6">
+      <main className="pt-32">
+        <header className="px-6 md:px-24 mb-32">
           <motion.h1 
-            initial={{ opacity: 0, letterSpacing: "1em" }}
-            animate={{ opacity: 1, letterSpacing: "0.2em" }}
-            transition={{ duration: 1.5 }}
-            className="text-xs uppercase font-medium text-muted-foreground mb-6"
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="text-6xl md:text-9xl font-light tracking-tighter leading-none"
           >
-            Service Suite
+            SOLUTIONS<br /><span className="text-primary italic">ENGINEERED.</span>
           </motion.h1>
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-light tracking-tight"
-          >
-            The <span className="italic">Standard</span> of Excellence.
-          </motion.h2>
         </header>
-        
-        {services.map((service, index) => (
-          <ServiceSection key={index} service={service} index={index} />
-        ))}
 
-        <section className="h-screen flex flex-col items-center justify-center text-center px-6">
-          <h3 className="text-2xl font-light mb-8">Ready to elevate?</h3>
-          <button className="px-12 py-4 border border-foreground uppercase tracking-[0.2em] text-xs hover:bg-foreground hover:text-white transition-all">
-            Get in Touch
-          </button>
-        </section>
+        {services.map((service, index) => (
+          <section key={service.id} className="min-h-screen py-24 px-6 md:px-24 border-t border-white/5 flex flex-col justify-center">
+            <div className="grid lg:grid-cols-2 gap-24 items-center">
+              <div className={index % 2 !== 0 ? "lg:order-2" : ""}>
+                 <h2 className="text-[10px] uppercase tracking-[0.5em] font-bold opacity-50 mb-8">{service.id} — {service.title}</h2>
+                 <p className="text-3xl md:text-5xl font-light tracking-tight leading-tight mb-12">
+                   {service.description}
+                 </p>
+                 <button className="text-[10px] uppercase tracking-[0.3em] font-bold border-b border-primary pb-2">Explore Flow</button>
+              </div>
+
+              <motion.div 
+                initial={{ clipPath: "inset(0 100% 0 0)" }}
+                whileInView={{ clipPath: "inset(0 0% 0 0)" }}
+                transition={{ duration: 1.2, ease: [0.19, 1, 0.22, 1] }}
+                viewport={{ once: true }}
+                className={`aspect-square overflow-hidden ${index % 2 !== 0 ? "lg:order-1" : ""}`}
+              >
+                <img src={service.image} alt={service.title} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000" />
+              </motion.div>
+            </div>
+          </section>
+        ))}
       </main>
     </div>
   );

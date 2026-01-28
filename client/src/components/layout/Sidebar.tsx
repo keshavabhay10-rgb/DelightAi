@@ -1,80 +1,89 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { Menu, X, Search } from "lucide-react";
 import { Link, useLocation } from "wouter";
 
 const menuItems = [
-  { label: "Home", href: "/" },
-  { label: "Services", href: "/services" },
-  { label: "Vision", href: "/vision" },
+  { label: "Solutions", href: "/services" },
+  { label: "Methodology", href: "/vision" },
+  { label: "Case Studies", href: "#" },
   { label: "Contact", href: "/contact" },
 ];
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
-  const [location] = useLocation();
+  const { scrollY } = useScroll();
+  
+  const navBg = useTransform(scrollY, [0, 400], ["rgba(0,0,0,0)", "rgba(255,255,255,0.8)"]);
+  const navBorder = useTransform(scrollY, [0, 400], ["rgba(255,255,255,0)", "rgba(0,0,0,0.05)"]);
+  const navColor = useTransform(scrollY, [0, 400], ["#ffffff", "#0d0d0d"]);
+  const logoInvert = useTransform(scrollY, [0, 400], ["invert(1)", "invert(0)"]);
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 h-24 glass-minimal z-50 flex items-center justify-between px-6 md:px-12 border-b border-black/5 bg-white/80 backdrop-blur-xl">
-        <Link href="/">
-          <motion.div 
-            whileHover={{ scale: 1.02 }}
-            className="cursor-pointer"
-          >
-            <img src="/src/assets/logo.png" alt="DelightAI" className="h-10" />
-          </motion.div>
-        </Link>
+      <motion.nav 
+        style={{ backgroundColor: navBg, borderColor: navBorder, color: navColor }}
+        className="fixed top-0 left-0 right-0 h-20 z-50 flex items-center justify-between px-6 md:px-12 backdrop-blur-md transition-colors duration-500"
+      >
+        <div className="flex items-center gap-12">
+          <Link href="/">
+            <motion.div className="cursor-pointer" style={{ filter: logoInvert }}>
+              <img src="/src/assets/logo.png" alt="DelightAI" className="h-10" />
+            </motion.div>
+          </Link>
+        </div>
 
-        <div className="hidden md:flex gap-12 items-center">
+        <div className="hidden lg:flex gap-12 items-center">
           {menuItems.map((item) => (
-            <Link key={item.href} href={item.href}>
+            <Link key={item.label} href={item.href}>
               <motion.a
-                whileHover={{ y: -2 }}
-                className={`text-xs font-bold tracking-[0.3em] uppercase cursor-pointer transition-all ${
-                  location === item.href ? "text-primary border-b border-primary/20 pb-1" : "text-foreground/40 hover:text-foreground"
-                }`}
+                whileHover={{ opacity: 0.5 }}
+                className="text-[10px] font-bold tracking-[0.3em] uppercase cursor-pointer"
               >
                 {item.label}
               </motion.a>
             </Link>
           ))}
-          <Button variant="outline" className="rounded-none border-foreground text-[10px] tracking-widest px-6 h-10 hover:bg-foreground hover:text-white transition-all uppercase font-bold">
-            Portal
-          </Button>
         </div>
 
-        <button 
-          onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-foreground"
-        >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </nav>
+        <div className="flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+            <span className="text-[10px] uppercase tracking-widest font-bold">Search</span>
+            <Search size={14} />
+          </div>
+          <button 
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden"
+          >
+            {isOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </motion.nav>
 
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.1 }}
-            className="fixed inset-0 bg-background z-40 flex flex-col items-center justify-center gap-12 md:hidden"
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 bg-background z-[60] flex flex-col p-12 lg:hidden"
           >
-            {menuItems.map((item) => (
-              <Link key={item.href} href={item.href}>
-                <a 
-                  onClick={() => setIsOpen(false)}
-                  className="text-3xl font-light tracking-[0.3em] uppercase hover:text-primary transition-colors"
-                >
-                  {item.label}
-                </a>
-              </Link>
-            ))}
+            <button onClick={() => setIsOpen(false)} className="self-end mb-12">
+              <X size={32} />
+            </button>
+            <div className="flex flex-col gap-8">
+              {menuItems.map((item) => (
+                <Link key={item.label} href={item.href}>
+                  <a onClick={() => setIsOpen(false)} className="text-4xl font-light tracking-tighter">
+                    {item.label}
+                  </a>
+                </Link>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </>
   );
 }
-
-import { Button } from "@/components/ui/button";
