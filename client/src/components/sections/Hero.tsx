@@ -6,69 +6,74 @@ export default function Hero() {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"]
+    offset: ["start start", "end start"],
   });
 
   const wheelRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
-  const wheelX = useTransform(scrollYProgress, [0, 0.5, 1], ["0%", "30%", "-20%"]);
-  const wheelY = useTransform(scrollYProgress, [0, 0.5, 1], ["0%", "10%", "5%"]);
-  const wheelScale = useTransform(scrollYProgress, [0, 1], [1, 1.8]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
+  const wheelScale = useTransform(scrollYProgress, [0, 1], [1, 1.4]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 0.3], [0, -50]);
 
   return (
-    <section ref={containerRef} className="relative h-[250vh] w-full flex flex-col items-center bg-[#0d0d0d]">
+    <section
+      ref={containerRef}
+      className="relative h-[200vh] w-full bg-[#0d0d0d]"
+    >
       <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden">
+        {/* Text Overlay */}
         <motion.div
-          style={{ opacity: contentOpacity }}
-          className="text-center z-10 mb-12"
+          style={{ opacity: contentOpacity, y: contentY }}
+          className="text-center z-10 mb-8"
         >
           <motion.span
-            initial={{ opacity: 0, letterSpacing: "1em" }}
-            animate={{ opacity: 0.5, letterSpacing: "0.6em" }}
-            className="text-[10px] uppercase font-medium mb-8 block text-white/50"
+            initial={{ opacity: 0, letterSpacing: "0.8em" }}
+            animate={{ opacity: 4.0, letterSpacing: "0.4em" }}
+            transition={{ duration: 1.2 }}
+            className="text-[15px] uppercase font-medium mb-6 block text-white/60"
           >
-            Engineered for Delight
+            Engineered for Tomorrow
           </motion.span>
-          <h1 className="text-5xl md:text-8xl font-medium tracking-tight leading-none mb-12 text-white" style={{ letterSpacing: "0.5px" }}>
-            DELIGHT<br /><span className="italic text-white/70">AI</span>
+
+          <h1
+            className="text-5xl md:text-6xl font-medium tracking-tight leading-tight mb-8 text-white"
+            style={{ letterSpacing: "-0.01em" }}
+          >
+            DELIGHT<span className="italic text-white/60">AI</span>
           </h1>
-          <Button variant="outline" className="rounded-sm border-white/20 text-white px-12 h-16 uppercase tracking-[0.4em] text-[10px] hover:bg-white hover:text-[#0d0d0d] transition-all bg-transparent">
-            Inquire Flow
+
+          <Button
+            variant="outline"
+            className="rounded-sm border-white/20 text-white px-10 h-14 uppercase tracking-[0.35em] text-[10px] hover:bg-white hover:text-[#0d0d0d] transition-all bg-transparent"
+          >
+            Explore Systems
           </Button>
         </motion.div>
 
-        {/* The Automation Core */}
+        {/* Gear Graphic */}
         <motion.div
           style={{
             rotate: wheelRotate,
-            x: wheelX,
-            y: wheelY,
             scale: wheelScale,
           }}
-          className="relative w-[130vh] h-[130vh] mt-[-10vh] pointer-events-none"
+          className="absolute w-[100vh] h-[100vh] pointer-events-none opacity-60"
         >
-          <motion.div
-            className="animate-breathe w-full h-full flex items-center justify-center"
-          >
-            <img
-              src="/src/assets/automation-core.png"
-              alt="Automation Core"
-              className="w-full h-full object-contain opacity-70 transition-all duration-1000"
-            />
-          </motion.div>
-
-          {/* Subtle architectural markers */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-10">
-            <div className="w-px h-48 bg-white" />
-            <div className="h-px w-48 bg-white" />
-            <div className="absolute w-[80%] h-[80%] border border-white/10 rounded-full" />
-          </div>
+          <img
+            src="/src/assets/WheelwithNoBG.png"
+            alt="Core"
+            className="w-full h-full object-contain"
+          />
         </motion.div>
 
-        {/* Status markers */}
-        <div className="absolute right-12 bottom-12 hidden lg:flex flex-col gap-4 text-[9px] uppercase tracking-widest font-medium text-white/40">
-          <div className="flex items-center gap-4"><div className="w-1 h-1 bg-primary rounded-full" /> System Active</div>
-          <div className="flex items-center gap-4"><div className="w-1 h-1 bg-white/60 rounded-full" /> 0.4ms Latency</div>
+        {/* Status Indicators */}
+        <div className="absolute right-12 bottom-12 hidden lg:flex flex-col gap-3 text-[9px] uppercase tracking-[0.35em] font-medium text-white/30">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-1 bg-primary rounded-full" />
+            System Active
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-1 bg-white/50 rounded-full" />
+            0.4ms Latency
+          </div>
         </div>
       </div>
     </section>

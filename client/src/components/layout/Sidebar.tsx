@@ -1,90 +1,121 @@
-import { useState } from "react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { Menu, X, Search } from "lucide-react";
-import { Link } from "wouter";
+import { useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { Link, useLocation } from "wouter";
 
 const menuItems = [
-  { label: "Solutions", href: "/services" },
-  { label: "Methodology", href: "/vision" },
-  { label: "Case Studies", href: "#" },
-  { label: "Contact", href: "/contact" },
+  { label: "SOLUTIONS", href: "/" },
+  { label: "METHODOLOGY", href: "/vision" },
+  { label: "CASE STUDIES", href: "/services" },
+  { label: "CONTACT", href: "/contact" },
 ];
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [location] = useLocation();
   const { scrollY } = useScroll();
 
-  // Starts transparent on dark hero, transitions to warm white bg
-  const navBg = useTransform(scrollY, [0, 400], ["rgba(0,0,0,0)", "rgba(248,246,243,0.9)"]);
-  const navBorder = useTransform(scrollY, [0, 400], ["rgba(255,255,255,0)", "rgba(0,0,0,0.05)"]);
-  const navColor = useTransform(scrollY, [0, 400], ["#ffffff", "#2e2a25"]);
-  const logoInvert = useTransform(scrollY, [0, 400], ["invert(1)", "invert(0)"]);
+  const navBg = useTransform(
+    scrollY,
+    [0, 100],
+    ["rgba(248,246,243,0)", "rgba(248,246,243,0.92)"],
+  );
+  const borderOpacity = useTransform(scrollY, [0, 100], [0, 0.1]);
 
   return (
     <>
+      {/* Top Navigation Bar */}
       <motion.nav
-        style={{ backgroundColor: navBg, borderColor: navBorder, color: navColor }}
-        className="fixed top-0 left-0 right-0 h-20 z-50 flex items-center justify-between px-6 md:px-12 backdrop-blur-md transition-colors duration-500"
+        style={{
+          backgroundColor: navBg,
+          borderBottomColor: useTransform(
+            borderOpacity,
+            (o) => `rgba(46,42,37,${o})`,
+          ),
+        }}
+        className="fixed top-0 left-0 right-0 h-[60px] z-50 flex items-center justify-between px-12 backdrop-blur-md border-b"
       >
-        <div className="flex items-center gap-12">
-          <Link href="/">
-            <motion.div className="cursor-pointer" style={{ filter: logoInvert }}>
-              <img src="/src/assets/logo.png" alt="DelightAI" className="h-10" />
-            </motion.div>
-          </Link>
-        </div>
+        {/* Logo */}
+        <Link href="/">
+          <div
+            className="cursor-pointer text-[22px] font-medium tracking-tight"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            Delight<span className="text-primary">AI</span>
+          </div>
+        </Link>
 
-        <div className="hidden lg:flex gap-12 items-center">
+        {/* Desktop Menu */}
+        <div className="hidden lg:flex gap-10 items-center">
           {menuItems.map((item) => (
             <Link key={item.label} href={item.href}>
-              <motion.a
-                whileHover={{ opacity: 0.5 }}
-                className="text-[10px] font-medium tracking-[0.3em] uppercase cursor-pointer"
+              <a
+                className={`text-[10px] font-medium tracking-[0.3em] uppercase cursor-pointer transition-opacity hover:opacity-100 ${
+                  location === item.href ? "opacity-100" : "opacity-40"
+                }`}
               >
                 {item.label}
-              </motion.a>
+              </a>
             </Link>
           ))}
         </div>
 
-        <div className="flex items-center gap-8">
-          <div className="hidden md:flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
-            <span className="text-[10px] uppercase tracking-widest font-medium">Search</span>
-            <Search size={14} />
-          </div>
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden"
-          >
-            {isOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
+        {/* Mobile Toggle */}
+        <button onClick={() => setIsOpen(!isOpen)} className="lg:hidden">
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </motion.nav>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 bg-[#0d0d0d] text-white z-[60] flex flex-col p-12 lg:hidden"
-          >
-            <button onClick={() => setIsOpen(false)} className="self-end mb-12">
-              <X size={32} />
-            </button>
-            <div className="flex flex-col gap-8">
-              {menuItems.map((item) => (
-                <Link key={item.label} href={item.href}>
-                  <a onClick={() => setIsOpen(false)} className="text-4xl font-light tracking-tighter">
+      {/* Minimal Dot Navigation - Right Side */}
+      <div className="hidden lg:block fixed right-10 top-1/2 -translate-y-1/2 z-50">
+        <div className="flex flex-col gap-6">
+          {menuItems.map((item) => (
+            <Link key={item.label} href={item.href}>
+              <div className="group relative cursor-pointer">
+                <div
+                  className={`w-[6px] h-[6px] rounded-full transition-all duration-300 ${
+                    location === item.href
+                      ? "bg-primary scale-150"
+                      : "bg-muted-foreground/30 hover:bg-primary/50 hover:scale-125"
+                  }`}
+                />
+                <div className="absolute right-6 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                  <div className="bg-card border border-border/40 rounded-md px-3 py-1.5 text-[11px] tracking-wide">
                     {item.label}
-                  </a>
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <motion.div
+          initial={{ x: "100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "100%" }}
+          transition={{ type: "spring", damping: 30, stiffness: 300 }}
+          className="fixed inset-0 bg-background z-[60] flex flex-col p-12 lg:hidden"
+        >
+          <button onClick={() => setIsOpen(false)} className="self-end mb-12">
+            <X size={28} />
+          </button>
+          <div className="flex flex-col gap-8">
+            {menuItems.map((item) => (
+              <Link key={item.label} href={item.href}>
+                <a
+                  onClick={() => setIsOpen(false)}
+                  className="text-3xl font-light tracking-tight hover:text-primary transition-colors"
+                >
+                  {item.label}
+                </a>
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+      )}
     </>
   );
 }
